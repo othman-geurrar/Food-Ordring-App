@@ -1,23 +1,45 @@
-import { Menu } from "lucide-react";
-import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "./ui/sheet";
+import { CircleUserRound, Menu } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetTitle,
+  SheetTrigger,
+} from "./ui/sheet";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
+import { useAuth0 } from "@auth0/auth0-react";
+import MobileNavLink from "./MobileNavLink";
 
 const MobileNav = () => {
+  const { isAuthenticated, loginWithRedirect, user } = useAuth0();
   return (
     <Sheet>
-        <SheetTrigger>
-            <Menu className="text-cyan-500"/>
-        </SheetTrigger>
-        <SheetContent className="space-y-3">
-            <SheetTitle><span>Welcome To FOODAPP!</span></SheetTitle>
-            <Separator />
-            <SheetDescription className="flex mt-4"> 
-                <Button className="flex-1 font-bold bg-cyan-500">Log In</Button>
-            </SheetDescription>
-        </SheetContent>
+      <SheetTrigger>
+        <Menu className="text-cyan-500" />
+      </SheetTrigger>
+      <SheetContent className="space-y-3">
+        <SheetTitle>
+          {isAuthenticated ? (
+            <span className="flex font-bold items-center  text-slate-500 text-center px-3 hover:text-cyan-500 gap-2">
+              <CircleUserRound className="text-cyan-500" />
+              {user?.name}
+            </span>
+          ) : (
+            <span className="text-cyan-500">Welcome To FOODAPP!</span>
+          )}
+        </SheetTitle>
+        <Separator />
+        <SheetDescription className="flex flex-col gap-4">
+          {isAuthenticated ? (
+            <MobileNavLink />
+          ) : (
+            <Button onClick={()=> loginWithRedirect()} className="flex-1 font-bold bg-cyan-500">Log In</Button>
+          )}
+        </SheetDescription>
+      </SheetContent>
     </Sheet>
-  )
-}
+  );
+};
 
 export default MobileNav;
